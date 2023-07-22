@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react'
-import { Button, createStyles, Input, Paper, rem, Text, Group, Stack } from '@mantine/core'
+import { Button, createStyles, rem, Text, Group, Stack } from '@mantine/core'
 import { Context } from '@/components/Context'
-import { IconPlus, IconX } from '@tabler/icons-react'
+import { IconX } from '@tabler/icons-react'
 import { flags, countriesData } from '@/data/countries'
 
 const useStyles = createStyles((theme) => ({
@@ -134,7 +134,7 @@ export default function Reports() {
                 </div>
 
                 <div className={classes.columnContent}>
-                    {selectedReport && (
+                    {selectedReport && selectedReport.tokens && (
                         <Stack>
                             {selectedReport.tokens.map((token) => (
                                 <Text key={token.symbol}>

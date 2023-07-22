@@ -1,7 +1,7 @@
 const supportedNetworks = [
     {
         name: 'Ethereum',
-        chainId: 1,
+        chainId: '1',
         rpcUrl: 'https://mainnet.infura.io/v3/',
         supportedTokens: [
             {
@@ -24,7 +24,7 @@ const supportedNetworks = [
     ,
     {
         name: 'Polygon',
-        chainId: '137',
+        chainId: 137,
         rpcUrl: 'https://polygon-mainnet.infura.io/v3/',
         supportedTokens: [
             {
@@ -125,7 +125,11 @@ const supportedNetworks = [
         chainId: '42220',
         rpcUrl: 'https://celo-mainnet.infura.io/v3/',
         supportedTokens: [
-
+            {
+                name: 'Tether',
+                symbol: 'USDT',
+                address: '0x617f3112bf5397D0467D315cC709EF968D9ba546'
+            }
         ]
     }
     ,

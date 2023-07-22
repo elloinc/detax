@@ -29,6 +29,7 @@ import { fetchQuery } from '@airstack/airstack-react'
 import { countriesData, flags } from '@/data/countries'
 import supportedNetworks from '@/data/networks'
 import fetchToken from '@/utils/fetchToken'
+import fetchTransactions from '@/utils/fetchTransactions'
 import { tokensQuery } from '@/utils/queries'
 import { Context } from '@/components/Context'
 
@@ -254,18 +255,27 @@ export default function Create() {
 
     const createReport = async () => {
         setLoading(true)
+        const transactions = {}
 
-        const { data, error } = await fetchQuery(tokensQuery, {
-            address: address,
-            tokens: tokens[1].map((item) => item.address)
-        })
+        for (const network of networks) {
+            if (network.chainId === 1) {
+                const { data, error } = await fetchQuery(tokensQuery, {
+                    address: address,
+                    tokens: tokens[1].map((item) => item.address)
+                })
 
-        if (error) {
-            setLoading(false)
-            return notifications.show({
-                title: 'Error',
-                message: 'An error occurred while generating the report'
-            })
+                if (error) {
+                    setLoading(false)
+                    return notifications.show({
+                        title: 'Error',
+                        message: 'An error occurred while generating the report'
+                    })
+                } else {
+                    transactions[network.chainId] = data['ethereumTransfers']['TokenTransfer'] || []
+                }
+            } else {
+                transactions[network.chainId] = await fetchTransactions(network.chainId, address, tokens[network.chainId])
+            }
         }
 
         const response = await fetch('/api/generate_pdf', {
@@ -274,9 +284,9 @@ export default function Create() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                data: data,
-                tokens: tokens[1],
-                address: address,
+                transactions: transactions,
+                tokens: tokens,
+                address: address
             })
         })
 
